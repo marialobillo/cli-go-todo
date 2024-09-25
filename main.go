@@ -38,5 +38,13 @@ func main() {
 		taskList = []tasks.Task{}
 	}
 
-	fmt.Println("Tasks:", taskList)
+	if (len(os.Args) < 2) {
+		fmt.Println("Please specify an action")
+		printUsage()
+		return
+	}
+}
+
+func printUsage() {
+	fmt.Print("Usage: TODO-CLI <action> [list|add|complete|delete]\n\n")
 }
