@@ -43,6 +43,21 @@ func main() {
 		printUsage()
 		return
 	}
+
+	switch os.Args[1] {
+	case "list":
+		tasks.ListTasks(taskList)
+	case "add":
+		taskList = tasks.AddTask(taskList, os.Args[2])
+	case "complete":
+		taskList = tasks.CompleteTask(taskList, os.Args[2])
+	case "delete":
+		taskList = tasks.DeleteTask(taskList, os.Args[2])
+	default:
+		fmt.Println("Invalid action")
+		printUsage()
+		return
+	}
 }
 
 func printUsage() {
