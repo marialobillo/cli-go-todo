@@ -12,7 +12,7 @@ import (
 const fileTasks = "tasks.json"
 
 func main() {
-	file, err := os.OpenFile(fileTasks, os.O_RDWR, 0666)
+	file, err := os.OpenFile(fileTasks, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
