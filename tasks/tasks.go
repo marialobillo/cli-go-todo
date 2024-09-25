@@ -7,6 +7,10 @@ type Task struct {
 }
 
 func ListTasks(taskList []Task) {
+	if len(taskList) == 0 {
+		println("No tasks")
+		return
+	}
 	for _, task := range taskList {
 		if task.Complete {
 			println("[x]", task.Name)
