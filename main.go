@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/marialobillo/cli-golang-todo/tasks"
@@ -58,8 +59,20 @@ func main() {
 		fmt.Println("Task added", taskList)
 		tasks.SaveTask(taskList, file)
 	case "complete":
-		taskList = tasks.CompleteTask(taskList, os.Args[2])
+		if len(os.Args) < 3 {
+			fmt.Println("Please specify the task Index to complete")
+		}
+
+		taskIndex, err := strconv.Atoi(os.Args[2])
+		if err != nil || taskIndex < 1 || taskIndex > len(taskList) {
+			fmt.Println("Invalid task index")
+			return
+		}
+		taskList = tasks.CompleteTask(taskList, taskIndex - 1)
+		tasks.SaveTask(taskList, file)
+		fmt.Println("Task marked as completed", taskList)
 	case "delete":
+
 		taskList = tasks.DeleteTask(taskList, os.Args[2])
 	default:
 		fmt.Println("Invalid action")

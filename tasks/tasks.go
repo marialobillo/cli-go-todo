@@ -3,7 +3,9 @@ package tasks
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"os"
+
 	"github.com/google/uuid"
 )
 
@@ -18,12 +20,12 @@ func ListTasks(taskList []Task) {
 		println("No tasks")
 		return
 	}
-	for _, task := range taskList {
-		if task.Complete {
-			println("[x]", task.Name)
-		} else {
-			println("[ ]", task.Name)
-		}
+	for index, task := range taskList {
+		status := "[ ]"
+        if task.Complete {
+            status = "[x]"
+        }
+        fmt.Printf("%d. %s %s\n", index + 1, status, task.Name)
 	}
 }
 
@@ -61,20 +63,22 @@ func SaveTask(taskList []Task, fileName *os.File) {
 	}
 }
 
-func CompleteTask(taskList []Task, id string) []Task {
-	for i, task := range taskList {
-		if task.ID == id {
-			taskList[i].Complete = true
-		}
+func CompleteTask(taskList []Task, index int) []Task {
+	if index >= 0 && index < len(taskList) {
+		taskList[index].Complete = true
+	} else {
+		fmt.Println("Invalid task number")
 	}
 	return taskList
 }
 
-func DeleteTask(taskList []Task, id string) []Task {
-	for i, task := range taskList {
-		if task.ID == id {
-			taskList = append(taskList[:i], taskList[i+1:]...)
-		}
+func DeleteTask(taskList []Task, index int) []Task {
+	if index >= 0 && index < len(taskList) {
+		taskList = append(taskList[:index], taskList[index+1:]...)
+	} else {
+		fmt.Println("Invalid task number")
 	}
 	return taskList
 }
+
+
