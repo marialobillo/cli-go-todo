@@ -18,5 +18,10 @@
 		"id": "033d31f4-93e3-40db-aab9-ae2bbe16bd69",
 		"name": "Finish this project",
 		"complete": true
+	},
+	{
+		"id": "afcd9494-d4de-433e-9f99-a78967277f7b",
+		"name": "new task in the evening",
+		"complete": false
 	}
 ]

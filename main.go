@@ -15,31 +15,12 @@ import (
 const fileName = "tasks.json"
 
 func main() {
-	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
+	taskList, file, err  := loadTasks(fileName)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error loading tasks: %v\n", err)
+		os.Exit(1)
 	}
 	defer file.Close()
-
-	var taskList []tasks.Task
-
-	info, err := file.Stat()
-	if err != nil {
-		panic(err)
-	}
-
-	if info.Size() > 0 {
-		bytes, err := io.ReadAll(file)
-		if err != nil {
-			panic(err)
-		}
-		err = json.Unmarshal(bytes, &taskList)
-		if err != nil {
-			panic(err)
-		}
-	} else {
-		taskList = []tasks.Task{}
-	}
 
 	if (len(os.Args) < 2) {
 		fmt.Println("Please specify an action")
@@ -92,6 +73,30 @@ func main() {
 		printUsage()
 		return
 	}
+}
+
+func loadTasks(fileName string) ([]tasks.Task, *os.File, error) {
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
+    if err != nil {
+        return nil, nil, err
+    }
+   
+    info, err := file.Stat()
+    if err != nil {
+        return nil, nil, err
+    }
+    var taskList []tasks.Task
+    if info.Size() > 0 {
+        bytes, err := io.ReadAll(file)
+        if err != nil {
+            return nil, nil, err
+        }
+        err = json.Unmarshal(bytes, &taskList)
+        if err != nil {
+            return nil, nil, err
+        }
+    }
+    return taskList, file, nil
 }
 
 func printUsage() {
