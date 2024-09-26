@@ -1,10 +1,5 @@
 [
 	{
-		"id": "1",
-		"name": "Task 1",
-		"complete": false
-	},
-	{
 		"id": "2",
 		"name": "Task 2",
 		"complete": true

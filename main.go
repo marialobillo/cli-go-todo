@@ -61,8 +61,8 @@ func main() {
 	case "complete":
 		if len(os.Args) < 3 {
 			fmt.Println("Please specify the task Index to complete")
+			return
 		}
-
 		taskIndex, err := strconv.Atoi(os.Args[2])
 		if err != nil || taskIndex < 1 || taskIndex > len(taskList) {
 			fmt.Println("Invalid task index")
@@ -72,8 +72,18 @@ func main() {
 		tasks.SaveTask(taskList, file)
 		fmt.Println("Task marked as completed", taskList)
 	case "delete":
-
-		taskList = tasks.DeleteTask(taskList, os.Args[2])
+		if len(os.Args) < 3 {
+			fmt.Println("Please specify the task Index to delete")
+			return
+		}
+		taskIndex, err := strconv.Atoi(os.Args[2])
+		if err != nil || taskIndex < 1 || taskIndex > len(taskList) {
+			fmt.Println("Invalid task index")
+			return
+		}
+		taskList = tasks.DeleteTask(taskList, taskIndex - 1)
+		tasks.SaveTask(taskList, file)
+		fmt.Println("Task deleted", taskList)
 	default:
 		fmt.Println("Invalid action")
 		printUsage()
