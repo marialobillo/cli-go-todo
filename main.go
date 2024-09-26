@@ -1,18 +1,20 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/marialobillo/cli-golang-todo/tasks"
 )
 
-const fileTasks = "tasks.json"
+const fileName = "tasks.json"
 
 func main() {
-	file, err := os.OpenFile(fileTasks, os.O_RDWR|os.O_CREATE, 0666)
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +50,13 @@ func main() {
 	case "list":
 		tasks.ListTasks(taskList)
 	case "add":
-		taskList = tasks.AddTask(taskList, os.Args[2])
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("Enter task name:")
+		name, _ := reader.ReadString('\n')
+		name = strings.TrimSpace(name)
+		taskList = tasks.AddTask(taskList, name)
+		fmt.Println("Task added", taskList)
+		tasks.SaveTask(taskList, file)
 	case "complete":
 		taskList = tasks.CompleteTask(taskList, os.Args[2])
 	case "delete":
