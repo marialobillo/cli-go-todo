@@ -43,8 +43,7 @@ func main() {
 		name = strings.TrimSpace(name)
 		taskList = tasks.AddTask(taskList, name)
 		tasks.SaveTask(taskList, file)
-		fmt.Println("Task added")
-		tasks.ListTasks(taskList)
+		showTaskList(taskList)
 	case "complete":
 		if *indexPtr < 1 || *indexPtr > len(taskList) {
 			fmt.Println("Invalid task index")
@@ -52,8 +51,7 @@ func main() {
 		}
 		taskList = tasks.CompleteTask(taskList, *indexPtr - 1)
 		tasks.SaveTask(taskList, file)
-		fmt.Println("Task completed")
-		tasks.ListTasks(taskList)
+		showTaskList(taskList)
 	case "delete":
 		if *indexPtr < 1 || *indexPtr > len(taskList) {
 			fmt.Println("Invalid task index")
@@ -61,8 +59,7 @@ func main() {
 		}
 		taskList = tasks.DeleteTask(taskList, *indexPtr - 1)
 		tasks.SaveTask(taskList, file)
-		fmt.Println("Task deleted")
-		tasks.ListTasks(taskList)
+		showTaskList(taskList)
 	default:
 		fmt.Println("Invalid action")
 		printUsage()
@@ -91,6 +88,11 @@ func loadTasks(fileName string) ([]tasks.Task, *os.File, error) {
         }
     }
     return taskList, file, nil
+}
+
+func showTaskList(taskList []tasks.Task) {
+	tasks.ListTasks(taskList)
+	fmt.Println()
 }
 
 func printUsage() {
