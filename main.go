@@ -56,8 +56,9 @@ func main() {
 		name, _ := reader.ReadString('\n')
 		name = strings.TrimSpace(name)
 		taskList = tasks.AddTask(taskList, name)
-		fmt.Println("Task added", taskList)
 		tasks.SaveTask(taskList, file)
+		fmt.Println("Task added")
+		tasks.ListTasks(taskList)
 	case "complete":
 		if len(os.Args) < 3 {
 			fmt.Println("Please specify the task Index to complete")
@@ -70,7 +71,8 @@ func main() {
 		}
 		taskList = tasks.CompleteTask(taskList, taskIndex - 1)
 		tasks.SaveTask(taskList, file)
-		fmt.Println("Task marked as completed", taskList)
+		fmt.Println("Task completed")
+		tasks.ListTasks(taskList)
 	case "delete":
 		if len(os.Args) < 3 {
 			fmt.Println("Please specify the task Index to delete")
@@ -83,7 +85,8 @@ func main() {
 		}
 		taskList = tasks.DeleteTask(taskList, taskIndex - 1)
 		tasks.SaveTask(taskList, file)
-		fmt.Println("Task deleted", taskList)
+		fmt.Println("Task deleted")
+		tasks.ListTasks(taskList)
 	default:
 		fmt.Println("Invalid action")
 		printUsage()

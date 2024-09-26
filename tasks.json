@@ -5,23 +5,18 @@
 		"complete": true
 	},
 	{
-		"id": "3",
-		"name": "Task 3",
+		"id": "10",
+		"name": "focus on my own life",
 		"complete": true
 	},
 	{
 		"id": "10",
-		"name": "focus on my own life",
-		"complete": false
-	},
-	{
-		"id": "10",
 		"name": "one step at a time",
-		"complete": false
+		"complete": true
 	},
 	{
 		"id": "033d31f4-93e3-40db-aab9-ae2bbe16bd69",
 		"name": "Finish this project",
-		"complete": false
+		"complete": true
 	}
 ]
