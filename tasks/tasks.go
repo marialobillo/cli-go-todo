@@ -41,25 +41,30 @@ func AddTask(taskList []Task, name string) []Task {
 func SaveTask(taskList []Task, fileName *os.File) {
 	bytes, err := json.MarshalIndent(taskList, "", "	")
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error mashaling JSON: %v\n", err)
+    	os.Exit(1)
 	}
 	_, err = fileName.Seek(0, 0)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error seeking file position: %v\n", err)
+    	os.Exit(1)
 	}
 	err = fileName.Truncate(0)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error truncating file: %v\n", err)
+    	os.Exit(1)
 	}
 	writer := bufio.NewWriter(fileName)
 	_, err = writer.Write(bytes)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error writing to file: %v\n", err)
+    	os.Exit(1)
 	}
 
 	err = writer.Flush()
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error flushing the buffer: %v\n", err)
+    	os.Exit(1)
 	}
 }
 
