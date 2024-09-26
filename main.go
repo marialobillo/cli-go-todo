@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"strings"
+	"flag"
 
 	"github.com/marialobillo/cli-golang-todo/tasks"
 )
@@ -15,20 +15,25 @@ import (
 const fileName = "tasks.json"
 
 func main() {
-	taskList, file, err  := loadTasks(fileName)
+	actionPtr := flag.String("action", "", "Action to perform: list, add, complete, delete")
+	indexPtr := flag.Int("index", -1, "Task index for complete or delete actions")
+
+	flag.Parse()
+
+	taskList, file, err := loadTasks(fileName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading tasks: %v\n", err)
 		os.Exit(1)
 	}
 	defer file.Close()
 
-	if (len(os.Args) < 2) {
+	if *actionPtr == "" {
 		fmt.Println("Please specify an action")
 		printUsage()
 		return
 	}
 
-	switch os.Args[1] {
+	switch *actionPtr {
 	case "list":
 		tasks.ListTasks(taskList)
 	case "add":
@@ -41,30 +46,20 @@ func main() {
 		fmt.Println("Task added")
 		tasks.ListTasks(taskList)
 	case "complete":
-		if len(os.Args) < 3 {
-			fmt.Println("Please specify the task Index to complete")
-			return
-		}
-		taskIndex, err := strconv.Atoi(os.Args[2])
-		if err != nil || taskIndex < 1 || taskIndex > len(taskList) {
+		if *indexPtr < 1 || *indexPtr > len(taskList) {
 			fmt.Println("Invalid task index")
 			return
 		}
-		taskList = tasks.CompleteTask(taskList, taskIndex - 1)
+		taskList = tasks.CompleteTask(taskList, *indexPtr - 1)
 		tasks.SaveTask(taskList, file)
 		fmt.Println("Task completed")
 		tasks.ListTasks(taskList)
 	case "delete":
-		if len(os.Args) < 3 {
-			fmt.Println("Please specify the task Index to delete")
-			return
-		}
-		taskIndex, err := strconv.Atoi(os.Args[2])
-		if err != nil || taskIndex < 1 || taskIndex > len(taskList) {
+		if *indexPtr < 1 || *indexPtr > len(taskList) {
 			fmt.Println("Invalid task index")
 			return
 		}
-		taskList = tasks.DeleteTask(taskList, taskIndex - 1)
+		taskList = tasks.DeleteTask(taskList, *indexPtr - 1)
 		tasks.SaveTask(taskList, file)
 		fmt.Println("Task deleted")
 		tasks.ListTasks(taskList)
@@ -80,7 +75,6 @@ func loadTasks(fileName string) ([]tasks.Task, *os.File, error) {
     if err != nil {
         return nil, nil, err
     }
-   
     info, err := file.Stat()
     if err != nil {
         return nil, nil, err
@@ -100,5 +94,7 @@ func loadTasks(fileName string) ([]tasks.Task, *os.File, error) {
 }
 
 func printUsage() {
-	fmt.Print("Usage: TODO-CLI <action> [list|add|complete|delete]\n\n")
+	fmt.Println("Usage:")
+	fmt.Println("  -action=<action> : Action to perform: list, add, complete, delete")
+	fmt.Println("  -index=<index>   : Task index for complete or delete (optional)")
 }
